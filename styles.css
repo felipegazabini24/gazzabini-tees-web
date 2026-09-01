@@ -762,6 +762,48 @@ ul { list-style: none; margin: 0; padding: 0; }
   line-height: 1.4;
 }
 
+/* ---------- Image lightbox ---------- */
+.card-media { cursor: zoom-in; }
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  background: rgba(8,7,6,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 4vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.lightbox-overlay.is-open { opacity: 1; pointer-events: auto; }
+.lightbox-img {
+  max-width: min(720px, 100%);
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  background: #1a1815;
+}
+.lightbox-close {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  color: var(--cream);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, border-color .2s;
+}
+.lightbox-close:hover { transform: scale(1.08); border-color: var(--accent); }
+
 /* ---------- Mobile nav ---------- */
 .mobile-nav {
   position: fixed;
