@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://felipegazabini24.github.io/gazzabini-tees-web/sitemap.xml

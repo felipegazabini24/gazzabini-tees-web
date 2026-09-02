@@ -19,3 +19,8 @@ Abrí `index.html` haciendo doble clic. Funciona sin instalar nada.
 
 ## Si en algún momento agregás pago real con tarjeta
 Este sitio arma el pedido y lo manda por WhatsApp — no cobra online. Para cobrar con tarjeta/Bancard necesitás un backend aparte; avisame cuando quieras dar ese paso.
+
+## Vista previa al compartir el link
+`index.html` tiene las etiquetas para que, al pegar el link en WhatsApp/Instagram/Facebook, se vea una tarjeta con imagen y texto (no solo el link pelado). Esa imagen es `assets/img/og-cover.jpg`.
+
+Si en algún momento cambiás el nombre del repositorio o lo publicás en otro dominio, esa vista previa deja de funcionar hasta que actualices la URL en `index.html`: buscá `felipegazabini24.github.io/gazzabini-tees-web` (aparece 3 veces, en las etiquetas `og:url`, `og:image` y `twitter:image`) y reemplazá por la URL nueva.

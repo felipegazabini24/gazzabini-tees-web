@@ -11,6 +11,26 @@
     try { fn(); } catch (e) { console.warn("[" + name + "]", e); }
   }
 
+  /* ---------------- Meta Pixel tracking ---------------- */
+  function trackPixel(eventName, params) {
+    try {
+      if (typeof window.fbq === "function") {
+        window.fbq("track", eventName, params || {});
+      }
+    } catch (e) {
+      // Píxel no disponible (bloqueador de anuncios, etc.) — no afecta el resto del sitio.
+    }
+  }
+
+  function initPixelTracking() {
+    // Cualquier link directo a WhatsApp (flotante, footer, botón de contacto) cuenta como contacto.
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function (link) {
+      link.addEventListener("click", function () {
+        trackPixel("Contact");
+      });
+    });
+  }
+
   /* ---------------- Nav solidify + mobile menu ---------------- */
   function initNav() {
     var nav = document.querySelector("[data-nav]");
@@ -141,11 +161,69 @@
     var overlay = document.querySelector("[data-lightbox-overlay]");
     var imgEl = document.querySelector("[data-lightbox-img]");
     var closeBtn = document.querySelector("[data-lightbox-close]");
+    var relatedWrap = document.querySelector("[data-lightbox-related]");
+    var relatedList = document.querySelector("[data-lightbox-related-list]");
     if (!overlay || !imgEl) return;
 
-    function openLightbox(src, alt) {
+    function buildRelated(currentCard) {
+      if (!relatedWrap || !relatedList) return;
+      relatedList.innerHTML = "";
+      if (!currentCard) {
+        relatedWrap.hidden = true;
+        return;
+      }
+      var anime = currentCard.getAttribute("data-anime");
+      var currentProduct = currentCard.getAttribute("data-product");
+      var allCards = Array.prototype.slice.call(document.querySelectorAll(".grid-products .card"));
+      var picks = allCards
+        .filter(function (c) {
+          return c.getAttribute("data-anime") === anime && c.getAttribute("data-product") !== currentProduct;
+        })
+        .slice(0, 3);
+
+      if (!picks.length) {
+        relatedWrap.hidden = true;
+        return;
+      }
+
+      picks.forEach(function (c) {
+        var cardImg = c.querySelector(".card-media img");
+        var name = c.getAttribute("data-name") || "";
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "lightbox-related-item";
+
+        var thumb = document.createElement("img");
+        thumb.className = "lightbox-related-thumb";
+        thumb.src = cardImg ? (cardImg.currentSrc || cardImg.getAttribute("src")) : "";
+        thumb.alt = "";
+
+        var label = document.createElement("span");
+        label.className = "lightbox-related-name";
+        label.textContent = name;
+
+        btn.appendChild(thumb);
+        btn.appendChild(label);
+
+        btn.addEventListener("click", function () {
+          closeLightbox();
+          c.scrollIntoView({ behavior: "smooth", block: "center" });
+          c.classList.add("card-highlight");
+          window.setTimeout(function () {
+            c.classList.remove("card-highlight");
+          }, 1600);
+        });
+
+        relatedList.appendChild(btn);
+      });
+
+      relatedWrap.hidden = false;
+    }
+
+    function openLightbox(src, alt, card) {
       imgEl.setAttribute("src", src);
       imgEl.setAttribute("alt", alt || "");
+      buildRelated(card);
       overlay.classList.add("is-open");
     }
     function closeLightbox() {
@@ -156,7 +234,8 @@
       media.addEventListener("click", function () {
         var img = media.querySelector("img");
         if (!img) return;
-        openLightbox(img.currentSrc || img.getAttribute("src"), img.getAttribute("alt"));
+        var card = media.closest(".card");
+        openLightbox(img.currentSrc || img.getAttribute("src"), img.getAttribute("alt"), card);
       });
     });
 
@@ -169,8 +248,72 @@
     });
   }
 
+  /* ---------------- Size guide ---------------- */
+  function initSizeGuide() {
+    var trigger = document.querySelector("[data-sizeguide-open]");
+    var overlay = document.querySelector("[data-sizeguide-overlay]");
+    var closeBtn = document.querySelector("[data-sizeguide-close]");
+    if (!trigger || !overlay) return;
+
+    function open() { overlay.classList.add("is-open"); }
+    function close() { overlay.classList.remove("is-open"); }
+
+    trigger.addEventListener("click", open);
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  }
+
+  /* ---------------- FAQ accordion ---------------- */
+  function initFaq() {
+    var items = document.querySelectorAll("[data-faq-toggle]");
+    if (!items.length) return;
+    items.forEach(function (btn) {
+      var answer = btn.parentElement.querySelector(".faq-answer");
+      if (!answer) return;
+      btn.addEventListener("click", function () {
+        var isOpen = btn.getAttribute("aria-expanded") === "true";
+        if (isOpen) {
+          btn.setAttribute("aria-expanded", "false");
+          answer.style.maxHeight = null;
+        } else {
+          btn.setAttribute("aria-expanded", "true");
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        }
+      });
+    });
+  }
+
   /* ---------------- Cart ---------------- */
-  var cart = []; // { id, name, price, image, size, fit, qty }
+  var CART_STORAGE_KEY = "gazzabini_cart_v1";
+
+  function loadCart() {
+    try {
+      var raw = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) return [];
+      var parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(function (it) {
+        return it && typeof it.id === "string" && typeof it.qty === "number";
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCart() {
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch (e) {
+      // localStorage no disponible (modo privado, etc.) — el pedido sigue funcionando, solo no se guarda entre visitas.
+    }
+  }
+
+  var cart = loadCart(); // { id, name, price, image, size, fit, qty }
 
   function money(n) {
     return n.toLocaleString("es-PY") + " Gs.";
@@ -214,6 +357,8 @@
     var total = cart.reduce(function (s, it) { return s + it.price * it.qty; }, 0);
     if (totalEl) totalEl.textContent = money(total);
 
+    saveCart();
+
     itemsEl.querySelectorAll("[data-remove-index]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var idx = parseInt(btn.getAttribute("data-remove-index"), 10);
@@ -232,9 +377,6 @@
     var total = cart.reduce(function (s, it) { return s + it.price * it.qty; }, 0);
     lines.push("");
     lines.push("Total: " + money(total));
-    lines.push("");
-    lines.push("Mi nombre es: ");
-    lines.push("Mi ciudad / zona de entrega es: ");
     return lines.join("\n");
   }
 
@@ -274,6 +416,14 @@
         if (existing) existing.qty += 1;
         else cart.push({ id: id, name: name, price: price, image: image, size: size, fit: fit, qty: 1 });
 
+        trackPixel("AddToCart", {
+          content_name: name,
+          content_ids: [id],
+          content_type: "product",
+          value: price,
+          currency: "PYG"
+        });
+
         updateCartUI();
         openCart();
 
@@ -290,6 +440,15 @@
     var waBtn = document.querySelector("[data-cart-whatsapp]");
     if (waBtn) {
       waBtn.addEventListener("click", function () {
+        var total = cart.reduce(function (s, it) { return s + it.price * it.qty; }, 0);
+        var numItems = cart.reduce(function (s, it) { return s + it.qty; }, 0);
+        trackPixel("InitiateCheckout", {
+          value: total,
+          currency: "PYG",
+          num_items: numItems,
+          content_type: "product",
+          content_ids: cart.map(function (it) { return it.id; })
+        });
         var msg = encodeURIComponent(buildWhatsAppMessage());
         window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg, "_blank", "noopener");
       });
@@ -306,7 +465,10 @@
     safe(initCardTilt, "initCardTilt");
     safe(initFilters, "initFilters");
     safe(initLightbox, "initLightbox");
+    safe(initSizeGuide, "initSizeGuide");
+    safe(initFaq, "initFaq");
     safe(initCart, "initCart");
+    safe(initPixelTracking, "initPixelTracking");
   }
 
   if (document.readyState === "loading") {
