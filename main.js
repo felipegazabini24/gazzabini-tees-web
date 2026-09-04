@@ -149,7 +149,8 @@
         pill.classList.add("is-active");
         var value = pill.getAttribute("data-filter");
         cards.forEach(function (card) {
-          var matches = value === "todas" || card.getAttribute("data-anime") === value;
+          var matches = value === "todas" ||
+            (value === "destacados" ? card.getAttribute("data-featured") === "true" : card.getAttribute("data-anime") === value);
           card.classList.toggle("is-filtered-out", !matches);
         });
       });
@@ -235,7 +236,8 @@
         var img = media.querySelector("img");
         if (!img) return;
         var card = media.closest(".card");
-        openLightbox(img.currentSrc || img.getAttribute("src"), img.getAttribute("alt"), card);
+        var fullRes = (card && card.getAttribute("data-image")) || img.currentSrc || img.getAttribute("src");
+        openLightbox(fullRes, img.getAttribute("alt"), card);
       });
     });
 
@@ -457,6 +459,187 @@
     updateCartUI();
   }
 
+  /* ---------------- Personalizador de remeras ---------------- */
+  function initCustomizer() {
+    var stage = document.querySelector("[data-cz-stage]");
+    var canvas = document.querySelector("[data-cz-canvas]");
+    if (!stage || !canvas || !canvas.getContext) return;
+
+    var ctx = canvas.getContext("2d");
+    var CW = canvas.width;
+    var CH = canvas.height;
+
+    var BASE_IMAGES = {
+      blanco: "assets/img/customizer-blanco.webp",
+      crema: "assets/img/customizer-crema.webp",
+      negro: "assets/img/customizer-negro.webp"
+    };
+
+    var emptyEl = document.querySelector("[data-cz-empty]");
+    var uploadInput = document.querySelector("[data-cz-upload]");
+    var colorButtons = document.querySelectorAll("[data-cz-colors] .cz-color");
+    var sizeRow = document.querySelector("[data-cz-size-row]");
+    var sizeSlider = document.querySelector("[data-cz-size]");
+    var hint = document.querySelector("[data-cz-hint]");
+    var actions = document.querySelector("[data-cz-actions]");
+    var downloadBtn = document.querySelector("[data-cz-download]");
+    var sendBtn = document.querySelector("[data-cz-send]");
+
+    var currentColor = "blanco";
+    var baseImg = null;
+    var designImg = null;
+    var design = { xRatio: 0.5, yRatio: 0.34, widthRatio: 0.32 };
+    var dragging = false;
+    var dragOffsetX = 0, dragOffsetY = 0;
+
+    function loadImage(src, cb) {
+      var img = new Image();
+      img.onload = function () { cb(img); };
+      img.src = src;
+    }
+
+    function drawContain(img, w, h) {
+      var scale = Math.min(CW / w, CH / h);
+      var dw = w * scale, dh = h * scale;
+      var dx = (CW - dw) / 2, dy = (CH - dh) / 2;
+      ctx.fillStyle = "#efe8db";
+      ctx.fillRect(0, 0, CW, CH);
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+
+    function designBox() {
+      var dw = design.widthRatio * CW;
+      var dh = dw * (designImg.naturalHeight / designImg.naturalWidth);
+      var dx = design.xRatio * CW - dw / 2;
+      var dy = design.yRatio * CH - dh / 2;
+      return { dw: dw, dh: dh, dx: dx, dy: dy };
+    }
+
+    function redraw() {
+      ctx.clearRect(0, 0, CW, CH);
+      if (baseImg) drawContain(baseImg, baseImg.naturalWidth, baseImg.naturalHeight);
+      if (designImg) {
+        var box = designBox();
+        ctx.drawImage(designImg, box.dx, box.dy, box.dw, box.dh);
+      }
+    }
+
+    function setColor(color) {
+      currentColor = color;
+      colorButtons.forEach(function (btn) {
+        btn.classList.toggle("is-active", btn.getAttribute("data-color") === color);
+      });
+      loadImage(BASE_IMAGES[color], function (img) {
+        baseImg = img;
+        redraw();
+      });
+    }
+
+    colorButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setColor(btn.getAttribute("data-color"));
+      });
+    });
+
+    if (uploadInput) {
+      uploadInput.addEventListener("change", function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          loadImage(ev.target.result, function (img) {
+            designImg = img;
+            design.xRatio = 0.5;
+            design.yRatio = 0.34;
+            design.widthRatio = (parseFloat(sizeSlider && sizeSlider.value) || 32) / 100;
+            if (emptyEl) emptyEl.hidden = true;
+            if (sizeRow) sizeRow.hidden = false;
+            if (hint) hint.hidden = false;
+            if (actions) actions.hidden = false;
+            redraw();
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (sizeSlider) {
+      sizeSlider.addEventListener("input", function () {
+        design.widthRatio = parseFloat(sizeSlider.value) / 100;
+        redraw();
+      });
+    }
+
+    function pointerToCanvas(e) {
+      var rect = canvas.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width) * CW;
+      var y = ((e.clientY - rect.top) / rect.height) * CH;
+      return { x: x, y: y };
+    }
+
+    canvas.addEventListener("pointerdown", function (e) {
+      if (!designImg) return;
+      var pos = pointerToCanvas(e);
+      var box = designBox();
+      if (pos.x >= box.dx && pos.x <= box.dx + box.dw && pos.y >= box.dy && pos.y <= box.dy + box.dh) {
+        dragging = true;
+        dragOffsetX = pos.x - design.xRatio * CW;
+        dragOffsetY = pos.y - design.yRatio * CH;
+        stage.classList.add("is-dragging");
+        canvas.setPointerCapture(e.pointerId);
+      }
+    });
+
+    canvas.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var pos = pointerToCanvas(e);
+      var xRatio = (pos.x - dragOffsetX) / CW;
+      var yRatio = (pos.y - dragOffsetY) / CH;
+      design.xRatio = Math.min(1, Math.max(0, xRatio));
+      design.yRatio = Math.min(1, Math.max(0, yRatio));
+      redraw();
+    });
+
+    function stopDrag() {
+      dragging = false;
+      stage.classList.remove("is-dragging");
+    }
+    canvas.addEventListener("pointerup", stopDrag);
+    canvas.addEventListener("pointercancel", stopDrag);
+
+    function downloadDesign() {
+      var link = document.createElement("a");
+      link.download = "gazzabini-tees-personalizada-" + currentColor + ".png";
+      link.href = canvas.toDataURL("image/png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    if (downloadBtn) {
+      downloadBtn.addEventListener("click", function () {
+        if (!designImg) return;
+        downloadDesign();
+      });
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener("click", function () {
+        if (!designImg) return;
+        downloadDesign();
+        trackPixel("Contact", { content_name: "Personalizador" });
+        var colorLabel = currentColor.charAt(0).toUpperCase() + currentColor.slice(1);
+        var msg = encodeURIComponent(
+          "Hola! Quiero pedir una remera personalizada (color " + colorLabel + "). " +
+          "Ya se descargó mi diseño, te lo adjunto en este chat."
+        );
+        window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg, "_blank", "noopener");
+      });
+    }
+
+    setColor(currentColor);
+  }
+
   /* ---------------- Boot ---------------- */
   function boot() {
     safe(initNav, "initNav");
@@ -468,6 +651,7 @@
     safe(initSizeGuide, "initSizeGuide");
     safe(initFaq, "initFaq");
     safe(initCart, "initCart");
+    safe(initCustomizer, "initCustomizer");
     safe(initPixelTracking, "initPixelTracking");
   }
 
