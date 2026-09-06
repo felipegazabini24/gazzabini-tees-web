@@ -375,6 +375,12 @@ ul { list-style: none; margin: 0; padding: 0; }
   margin-bottom: 0.7rem;
   display: block;
 }
+.eyebrow-index {
+  color: var(--muted);
+  font-weight: 800;
+  margin-right: 0.5em;
+  opacity: 0.75;
+}
 .section-title {
   font-size: clamp(2rem, 4.6vw, 3.4rem);
   max-width: 14ch;
@@ -384,6 +390,66 @@ ul { list-style: none; margin: 0; padding: 0; }
   color: var(--cream-2);
   font-size: 0.95rem;
   line-height: 1.55;
+}
+
+/* ---------- Colecciones por mundo (anime) ---------- */
+.worlds-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+.world-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #14100c;
+  padding: 0;
+  text-align: left;
+}
+.world-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(0.55) contrast(1.05) brightness(0.85);
+  transition: transform .5s var(--ease-out), filter .4s;
+}
+.world-card:hover img { transform: scale(1.06); filter: grayscale(0.1) contrast(1.05) brightness(0.9); }
+.world-card-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18px 18px, rgba(246,242,234,0.12) 1.4px, transparent 1.4px) 0 0/16px 16px,
+    linear-gradient(180deg, rgba(20,16,12,0.15) 0%, rgba(20,16,12,0.75) 100%);
+}
+.world-card-body {
+  position: absolute;
+  left: 0.9rem; right: 0.9rem; bottom: 0.85rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.world-card-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(246,242,234,0.7);
+}
+.world-card-name {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.15rem;
+  color: #f6f2ea;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 900px) {
+  .worlds-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---------- Filter pills ---------- */
@@ -409,15 +475,49 @@ ul { list-style: none; margin: 0; padding: 0; }
   border-color: var(--accent);
   color: #14100c;
 }
+.filter-pill--anime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.4rem;
+  padding-left: 0.4rem;
+}
+.filter-pill-thumb {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid rgba(255,255,255,0.4);
+  flex-shrink: 0;
+}
+.filter-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.65;
+}
 .card.is-filtered-out { display: none; }
 
 /* ---------- Trust strip ---------- */
 .trust-strip {
+  position: relative;
   background: var(--bg-2);
   border-bottom: 1px solid var(--line);
   padding-block: 1.1rem;
+  overflow: hidden;
+}
+.trust-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 .trust-row {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -432,6 +532,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   padding-inline: 1.4rem;
 }
 .trust-item:not(:first-child) { border-left: 1px solid var(--line-2); }
+.trust-item--count { color: var(--accent); }
 @media (max-width: 700px) {
   .trust-item { padding-inline: 0.8rem; font-size: 0.66rem; }
 }
@@ -513,6 +614,74 @@ ul { list-style: none; margin: 0; padding: 0; }
   font-size: 1.1rem;
 }
 .sizeguide-close:hover { border-color: var(--accent); }
+
+/* ---------- En movimiento (video) ---------- */
+.movement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+.movement-card {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #14100c;
+  border: 1px solid var(--line);
+}
+.movement-video, .movement-fallback img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.movement-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.4rem;
+}
+.movement-fallback img { filter: grayscale(0.5) brightness(0.55); }
+.movement-fallback span {
+  position: relative;
+  z-index: 1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #f3ede2;
+  background: rgba(18,17,16,0.55);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+.movement-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: rgba(246,242,234,0.9);
+  color: #14100c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: transform .25s var(--ease-out), opacity .25s;
+}
+.movement-play:hover { transform: translate(-50%, -50%) scale(1.08); }
+.movement-play.is-playing { opacity: 0; pointer-events: none; }
+@media (max-width: 800px) {
+  .movement-grid { grid-template-columns: repeat(2, 1fr); }
+  .movement-grid .movement-card:last-child { display: none; }
+}
+@media (max-width: 560px) {
+  .movement-grid { grid-template-columns: 1fr; }
+  .movement-grid .movement-card:nth-child(2) { display: none; }
+}
 
 /* ---------- Reseñas ---------- */
 .reviews-grid {
@@ -615,10 +784,15 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 
 /* ---------- Product grid ---------- */
+/* Masonry via CSS columns: each card keeps its natural height (driven by
+   its own image aspect-ratio), and cards pack tightly one under another
+   within a column instead of being pinned to a shared row height. This is
+   what actually removes leftover space — align-items:start only avoided
+   *forcing* equal heights, it didn't stop uneven row bottoms from showing
+   as gaps. Do not go back to CSS Grid + align-items:start for this. */
 .grid-products {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1.2rem, 2.4vw, 1.8rem);
+  columns: 3;
+  column-gap: clamp(1.2rem, 2.4vw, 1.8rem);
 }
 .card {
   position: relative;
@@ -630,6 +804,11 @@ ul { list-style: none; margin: 0; padding: 0; }
   transition: transform .35s var(--ease-out), border-color .35s;
   --mx: 50%;
   --my: 50%;
+  display: block;
+  width: 100%;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
 }
 .card:hover { border-color: var(--line-2); }
 .card-halo {
@@ -647,15 +826,53 @@ ul { list-style: none; margin: 0; padding: 0; }
   aspect-ratio: var(--ar, 4 / 5);
   overflow: hidden;
   background: #efe8db;
-  padding: 0.6rem;
 }
 .card-media img {
   width: 100%; height: 100%;
-  object-fit: contain;
-  object-position: center;
-  transition: transform .6s var(--ease-out);
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(0.55) contrast(1.05) brightness(0.88);
+  transition: transform .6s var(--ease-out), filter .5s var(--ease-out);
 }
-.card:hover .card-media img { transform: scale(1.035); }
+.card:hover .card-media img { transform: scale(1.045); filter: grayscale(0.05) contrast(1.05) brightness(0.94); }
+.card-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16px 16px, rgba(246,242,234,0.14) 1.3px, transparent 1.3px) 0 0/14px 14px,
+    linear-gradient(180deg, rgba(20,16,12,0.05) 0%, rgba(20,16,12,0.18) 55%, rgba(20,16,12,0.82) 100%);
+}
+.card-media-caption {
+  position: absolute;
+  left: 0.9rem; right: 3.2rem; bottom: 0.8rem;
+  z-index: 2;
+  pointer-events: none;
+}
+.card-media-caption .card-name {
+  color: #f6f2ea;
+  font-size: 1.05rem;
+}
+.card-media-caption .card-desc {
+  color: rgba(246,242,234,0.72);
+  font-size: 0.76rem;
+  margin-top: 0.2rem;
+}
+.card-media::after {
+  content: "GAZZABINI TEES";
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.5rem;
+  z-index: 2;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(246, 242, 234, 0.45);
+  pointer-events: none;
+}
 .card-badge-new {
   position: absolute;
   top: 0.85rem; right: 0.85rem;
@@ -793,6 +1010,68 @@ ul { list-style: none; margin: 0; padding: 0; }
 .card-add:hover { background: #ff7440; transform: translateY(-1px); }
 .card-add.is-added { background: #4c8f5a; color: #f3ede2; }
 
+/* ---------- Spotlight (Más pedidas / Ofertas) ---------- */
+.spotlight { margin-top: 2.4rem; }
+.spotlight[hidden] { display: none; }
+.spotlight-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.spotlight-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.01em;
+}
+.spotlight-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.spotlight-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.spotlight-item {
+  display: flex;
+  flex-direction: column;
+  width: 168px;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  text-align: left;
+  transition: transform .25s var(--ease-out), border-color .25s;
+}
+.spotlight-item:hover { transform: translateY(-3px); border-color: var(--line-2); }
+.spotlight-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(0.5) contrast(1.05) brightness(0.9);
+  transition: filter .4s var(--ease-out);
+}
+.spotlight-item:hover .spotlight-thumb { filter: grayscale(0.05) contrast(1.05) brightness(0.96); }
+.spotlight-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.6rem 0.7rem 0.1rem;
+}
+.spotlight-price {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--price-green);
+  padding: 0.1rem 0.7rem 0.7rem;
+}
+.spotlight-price sup { font-size: 0.65em; font-weight: 700; opacity: .85; }
+@media (max-width: 560px) {
+  .spotlight-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.4rem; scroll-snap-type: x proximity; }
+  .spotlight-item { flex: 0 0 auto; scroll-snap-align: start; }
+}
+
 /* ---------- About ---------- */
 .about {
   background: var(--bg-2);
@@ -850,6 +1129,45 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .pillar-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
 .pillar-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ---------- Manifiesto ---------- */
+.manifesto {
+  position: relative;
+  background: var(--cream);
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+  overflow: hidden;
+}
+.manifesto-glow {
+  position: absolute;
+  inset: -40% -10% -10% -10%;
+  background: radial-gradient(50% 45% at 50% 45%, rgba(255,90,31,0.22), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+.manifesto-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.manifesto-inner { position: relative; z-index: 2; }
+.manifesto-text {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--bg);
+  max-width: 20ch;
+  margin-inline: auto;
+  text-align: center;
+  text-wrap: balance;
+}
+.manifesto-text em {
+  font-style: normal;
+  color: var(--accent);
+}
 
 /* ---------- CTA ---------- */
 .cta {
@@ -1009,17 +1327,92 @@ ul { list-style: none; margin: 0; padding: 0; }
 .cart-item-info { flex: 1; }
 .cart-item-name { font-weight: 700; font-size: 0.88rem; }
 .cart-item-meta { font-size: 0.76rem; color: var(--muted); margin-top: 0.2rem; }
-.cart-item-price { font-size: 0.82rem; color: var(--accent); font-weight: 700; margin-top: 0.3rem; }
+.cart-item-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin-top: 0.3rem;
+}
+.cart-item-stock::before {
+  content: "";
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  flex-shrink: 0;
+}
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+.cart-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.cart-item-qty-btn {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--bg-3);
+  color: var(--cream);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s;
+}
+.cart-item-qty-btn:hover { border-color: var(--accent); }
+.cart-item-qty-value { font-weight: 700; font-size: 0.82rem; min-width: 1.4ch; text-align: center; }
+.cart-item-price { font-size: 0.82rem; color: var(--accent); font-weight: 700; }
 .cart-item-remove {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--muted);
   text-decoration: underline;
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
 }
 .cart-item-remove:hover { color: var(--accent-2); }
 .cart-foot {
   padding: 1.2rem 1.4rem 1.6rem;
   border-top: 1px solid var(--line);
+}
+.cart-delivery[hidden] { display: none; }
+.cart-delivery {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 0.9rem;
+}
+.cart-delivery-icon { font-size: 1rem; }
+.cart-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.cart-trust span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
 }
 .cart-total {
   display: flex;
@@ -1079,6 +1472,18 @@ ul { list-style: none; margin: 0; padding: 0; }
   max-height: 92vh;
   overflow-y: auto;
 }
+.lightbox-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  width: 100%;
+}
+.lightbox-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-block;
+}
 .lightbox-img {
   max-width: 100%;
   max-height: 74vh;
@@ -1087,7 +1492,137 @@ ul { list-style: none; margin: 0; padding: 0; }
   border-radius: 12px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
   background: #efe8db;
-  flex-shrink: 0;
+  display: block;
+}
+.lightbox-img-wrap::after {
+  content: "GAZZABINI TEES";
+  position: absolute;
+  right: 1rem;
+  bottom: 0.85rem;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(246, 242, 234, 0.55);
+  pointer-events: none;
+}
+.lightbox-info {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+.lightbox-info[hidden] { display: none; }
+.lightbox-anime {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+.lightbox-name {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.4rem;
+  color: var(--bg);
+  margin-bottom: 0.3rem;
+}
+.lightbox-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--price-green);
+  margin-bottom: 1rem;
+}
+.lightbox-price sup { font-size: 0.65em; font-weight: 700; opacity: .85; }
+.lightbox-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-bottom: 1.1rem;
+}
+.lightbox-trust span {
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--bg-2);
+  background: rgba(246,242,234,0.08);
+  border: 1px solid rgba(246,242,234,0.18);
+  padding: 0.32rem 0.6rem;
+  border-radius: 999px;
+}
+.lightbox-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+.lightbox-select {
+  appearance: none;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  color: var(--cream);
+  border-radius: 9px;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.lightbox-qty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.lightbox-qty-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  color: var(--cream);
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s;
+}
+.lightbox-qty-btn:hover { border-color: var(--accent); }
+.lightbox-qty span {
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 1.4ch;
+  text-align: center;
+  color: var(--bg);
+}
+.lightbox-add {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #14100c;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background .25s, transform .25s;
+  margin-bottom: 0.9rem;
+}
+.lightbox-add:hover { background: #ff7440; transform: translateY(-1px); }
+.lightbox-shipping {
+  font-size: 0.72rem;
+  color: var(--bg-2);
+  opacity: 0.8;
+  line-height: 1.4;
+}
+@media (min-width: 860px) {
+  .lightbox-content { max-width: min(980px, 96vw); }
+  .lightbox-main { flex-direction: row; align-items: flex-start; justify-content: center; }
+  .lightbox-img-wrap { flex: 1 1 52%; max-width: 480px; }
+  .lightbox-img { max-height: 70vh; }
+  .lightbox-info { flex: 1 1 40%; max-width: 340px; text-align: left; }
+  .lightbox-trust, .lightbox-qty { justify-content: flex-start; }
 }
 .lightbox-related { width: 100%; }
 .lightbox-related-title {
@@ -1299,14 +1834,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .nav-burger { display: flex; }
-  .grid-products { grid-template-columns: repeat(2, 1fr); }
+  .grid-products { columns: 2; }
   .about-grid { grid-template-columns: 1fr; }
   .about-media { max-width: 420px; margin-inline: auto; }
   .customizer-stage { grid-template-columns: 1fr; }
   .customizer-canvas-wrap { max-width: 420px; margin-inline: auto; }
 }
 @media (max-width: 560px) {
-  .grid-products { grid-template-columns: 1fr; }
+  .grid-products { columns: 1; }
   .card-options { grid-template-columns: 1fr 1fr; }
   .hero-scroll { display: none; }
   .footer-grid { flex-direction: column; }

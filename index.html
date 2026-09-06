@@ -40,7 +40,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260901">
+<link rel="stylesheet" href="styles.css?v=20260906e">
 <link rel="canonical" href="https://felipegazabini24.github.io/gazzabini-tees-web/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23121110%22/><text x=%2250%25%22 y=%2262%25%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22%23ff5a1f%22 font-family=%22sans-serif%22>G</text></svg>">
 
@@ -127,6 +127,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 <!-- ============ FRANJA DE CONFIANZA ============ -->
 <div class="trust-strip">
   <div class="wrap trust-row">
+    <span class="trust-item trust-item--count" data-total-designs>+<span data-total-count>0</span> diseños</span>
     <span class="trust-item">Envíos a todo Paraguay</span>
     <span class="trust-item">Entrega en 3 días</span>
     <span class="trust-item">100% Algodón</span>
@@ -169,7 +170,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="section-eyebrow">Catálogo</span>
+        <span class="section-eyebrow"><span class="eyebrow-index">01 —</span>Catálogo</span>
         <h2 class="section-title">Elegí tu colección</h2>
       </div>
       <div>
@@ -178,13 +179,83 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
       </div>
     </div>
 
+    <!-- ---- Mundos / colecciones por anime ---- -->
+    <div class="worlds-grid reveal" data-worlds>
+      <button class="world-card" data-world-filter="Bleach" type="button">
+        <img src="assets/img/kenpachi.webp" alt="Colección Bleach" loading="lazy">
+        <div class="world-card-overlay"></div>
+        <div class="world-card-body">
+          <span class="world-card-count" data-world-count="Bleach"></span>
+          <span class="world-card-name">Bleach</span>
+        </div>
+      </button>
+      <button class="world-card" data-world-filter="Jujutsu Kaisen" type="button">
+        <img src="assets/img/jjk-sukuna.webp" alt="Colección Jujutsu Kaisen" loading="lazy">
+        <div class="world-card-overlay"></div>
+        <div class="world-card-body">
+          <span class="world-card-count" data-world-count="Jujutsu Kaisen"></span>
+          <span class="world-card-name">Jujutsu Kaisen</span>
+        </div>
+      </button>
+      <button class="world-card" data-world-filter="Naruto" type="button">
+        <img src="assets/img/naruto-grupo.webp" alt="Colección Naruto" loading="lazy">
+        <div class="world-card-overlay"></div>
+        <div class="world-card-body">
+          <span class="world-card-count" data-world-count="Naruto"></span>
+          <span class="world-card-name">Naruto</span>
+        </div>
+      </button>
+      <button class="world-card" data-world-filter="Tokyo Ghoul" type="button">
+        <img src="assets/img/tg-kaneki.webp" alt="Colección Tokyo Ghoul" loading="lazy">
+        <div class="world-card-overlay"></div>
+        <div class="world-card-body">
+          <span class="world-card-count" data-world-count="Tokyo Ghoul"></span>
+          <span class="world-card-name">Tokyo Ghoul</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- ---- Las más pedidas (derivado en vivo de las tarjetas con "Más vendida") ---- -->
+    <div class="spotlight reveal" data-spotlight="best" hidden>
+      <div class="spotlight-head">
+        <span class="spotlight-title">Las más pedidas</span>
+        <span class="spotlight-note">Los diseños que más se llevan los clientes.</span>
+      </div>
+      <div class="spotlight-row" data-spotlight-list></div>
+    </div>
+
+    <!-- ---- Ofertas activas (derivado en vivo de las tarjetas con precio tachado) ---- -->
+    <div class="spotlight reveal" data-spotlight="offers" hidden>
+      <div class="spotlight-head">
+        <span class="spotlight-title">Ofertas de Septiembre</span>
+        <span class="spotlight-note">Remeras con descuento activo, por tiempo limitado.</span>
+      </div>
+      <div class="spotlight-row" data-spotlight-list></div>
+    </div>
+
     <div class="filter-pills reveal" data-filters>
       <button class="filter-pill is-active" data-filter="todas">Todas</button>
       <button class="filter-pill" data-filter="destacados">Destacados</button>
-      <button class="filter-pill" data-filter="Bleach">Bleach</button>
-      <button class="filter-pill" data-filter="Jujutsu Kaisen">Jujutsu Kaisen</button>
-      <button class="filter-pill" data-filter="Naruto">Naruto</button>
-      <button class="filter-pill" data-filter="Tokyo Ghoul">Tokyo Ghoul</button>
+      <button class="filter-pill filter-pill--anime" data-filter="Bleach">
+        <img class="filter-pill-thumb" src="assets/img/hollow-mask-card.webp" alt="">
+        <span>Bleach</span>
+        <span class="filter-count" data-anime-count="Bleach"></span>
+      </button>
+      <button class="filter-pill filter-pill--anime" data-filter="Jujutsu Kaisen">
+        <img class="filter-pill-thumb" src="assets/img/jjk-gojo-crema-card.webp" alt="">
+        <span>Jujutsu Kaisen</span>
+        <span class="filter-count" data-anime-count="Jujutsu Kaisen"></span>
+      </button>
+      <button class="filter-pill filter-pill--anime" data-filter="Naruto">
+        <img class="filter-pill-thumb" src="assets/img/naruto-grupo-card.webp" alt="">
+        <span>Naruto</span>
+        <span class="filter-count" data-anime-count="Naruto"></span>
+      </button>
+      <button class="filter-pill filter-pill--anime" data-filter="Tokyo Ghoul">
+        <img class="filter-pill-thumb" src="assets/img/tg-kaneki-card.webp" alt="">
+        <span>Tokyo Ghoul</span>
+        <span class="filter-count" data-anime-count="Tokyo Ghoul"></span>
+      </button>
     </div>
 
     <div class="grid-products" data-grid>
@@ -195,10 +266,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-best">Más vendida</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/hollow-mask-card.webp" alt="Remera Máscara Hollow, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Máscara Hollow</h3>
+            <p class="card-desc">Ichigo Vasto Lorde · frente y espalda estampados</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Máscara Hollow</h3>
-          <p class="card-desc">Ichigo Vasto Lorde · frente y espalda estampados</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -222,10 +295,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <div class="card-media" style="--ar:1170/1071">
           <span class="card-tag">Blanco</span>
           <img src="assets/img/bleach-grupo-card.webp" alt="Remera Trío Shinigami, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Trío Shinigami</h3>
+            <p class="card-desc">Ichigo, hollow y Shiro · frente y espalda estampados</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Trío Shinigami</h3>
-          <p class="card-desc">Ichigo, hollow y Shiro · frente y espalda estampados</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -249,10 +324,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <div class="card-media" style="--ar:1170/1099">
           <span class="card-tag">Crema</span>
           <img src="assets/img/aizen-card.webp" alt="Remera Sosuke Aizen, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Sosuke Aizen</h3>
+            <p class="card-desc">Saga Guerra Sangrienta de Mil Años</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Sosuke Aizen</h3>
-          <p class="card-desc">Saga Guerra Sangrienta de Mil Años</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -276,10 +353,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <div class="card-media" style="--ar:1170/1099">
           <span class="card-tag">Crema</span>
           <img src="assets/img/unohana-card.webp" alt="Remera Unohana Retsu, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Unohana Retsu</h3>
+            <p class="card-desc">Saga Guerra Sangrienta de Mil Años</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Unohana Retsu</h3>
-          <p class="card-desc">Saga Guerra Sangrienta de Mil Años</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -303,10 +382,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <div class="card-media" style="--ar:1170/1099">
           <span class="card-tag">Crema</span>
           <img src="assets/img/ichigo-card.webp" alt="Remera Ichigo Kurosaki, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Ichigo Kurosaki</h3>
+            <p class="card-desc">Shinigami sustituto · Zangetsu</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Ichigo Kurosaki</h3>
-          <p class="card-desc">Shinigami sustituto · Zangetsu</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -330,10 +411,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <div class="card-media" style="--ar:1170/1099">
           <span class="card-tag">Blanco</span>
           <img src="assets/img/kenpachi-card.webp" alt="Remera Zaraki Kenpachi, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Zaraki Kenpachi</h3>
+            <p class="card-desc">Capitán de la Onceava División</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Zaraki Kenpachi</h3>
-          <p class="card-desc">Capitán de la Onceava División</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -358,10 +441,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-yuuta-card.webp" alt="Remera Yuuta Okkotsu, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Yuuta Okkotsu</h3>
+            <p class="card-desc">Special Grade · Jujutsu Kaisen</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Yuuta Okkotsu</h3>
-          <p class="card-desc">Special Grade · Jujutsu Kaisen</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -385,10 +470,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-toji-joven-card.webp" alt="Remera Toji Fushiguro — Sorcerer Killer, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Toji Fushiguro — Sorcerer Killer</h3>
+            <p class="card-desc">Jujutsu Kaisen 0</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Toji Fushiguro — Sorcerer Killer</h3>
-          <p class="card-desc">Jujutsu Kaisen 0</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -412,10 +499,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-best">Más vendida</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-toji-cadena-card.webp" alt="Remera Toji Fushiguro — Cadena, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Toji Fushiguro — Cadena</h3>
+            <p class="card-desc">Técnica maldita: Sorcerer Killer</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Toji Fushiguro — Cadena</h3>
-          <p class="card-desc">Técnica maldita: Sorcerer Killer</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -439,10 +528,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-toji-daga-card.webp" alt="Remera Toji Fushiguro — Daga, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Toji Fushiguro — Daga</h3>
+            <p class="card-desc">Técnica maldita: Sorcerer Killer</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Toji Fushiguro — Daga</h3>
-          <p class="card-desc">Técnica maldita: Sorcerer Killer</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -466,10 +557,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-nanami-color-card.webp" alt="Remera Kento Nanami, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Kento Nanami</h3>
+            <p class="card-desc">Grado 1 · Overtime</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Kento Nanami</h3>
-          <p class="card-desc">Grado 1 · Overtime</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -493,10 +586,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-nanami-mono-card.webp" alt="Remera Kento Nanami — Retrato, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Kento Nanami — Retrato</h3>
+            <p class="card-desc">Grado 1 · Overtime</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Kento Nanami — Retrato</h3>
-          <p class="card-desc">Grado 1 · Overtime</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -520,10 +615,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-choso-card.webp" alt="Remera Choso, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Choso</h3>
+            <p class="card-desc">Flowing Red Scale</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Choso</h3>
-          <p class="card-desc">Flowing Red Scale</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -547,10 +644,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/jjk-nobara-card.webp" alt="Remera Nobara Kugisaki, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Nobara Kugisaki</h3>
+            <p class="card-desc">Jujutsu Kaisen</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Nobara Kugisaki</h3>
-          <p class="card-desc">Jujutsu Kaisen</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -574,10 +673,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Negro</span>
           <img src="assets/img/jjk-sukuna-card.webp" alt="Remera Sukuna, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Sukuna</h3>
+            <p class="card-desc">Rey de las Maldiciones</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Sukuna</h3>
-          <p class="card-desc">Rey de las Maldiciones</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -601,10 +702,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/jjk-mahoraga-card.webp" alt="Remera Mahoraga, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Mahoraga</h3>
+            <p class="card-desc">Shikigami de las Diez Sombras</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Mahoraga</h3>
-          <p class="card-desc">Shikigami de las Diez Sombras</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -628,10 +731,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/jjk-gojo-crema-card.webp" alt="Remera Gojo Satoru — Infinito, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Gojo Satoru — Infinito</h3>
+            <p class="card-desc">Muryoku Kusho</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Gojo Satoru — Infinito</h3>
-          <p class="card-desc">Muryoku Kusho</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -655,10 +760,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Negro</span>
           <img src="assets/img/jjk-gojo-negro-1-card.webp" alt="Remera Gojo Satoru — Seña, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Gojo Satoru — Seña</h3>
+            <p class="card-desc">Jujutsu Kaisen</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Gojo Satoru — Seña</h3>
-          <p class="card-desc">Jujutsu Kaisen</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -682,10 +789,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Negro</span>
           <img src="assets/img/jjk-gojo-negro-2-card.webp" alt="Remera Gojo Satoru — Silencio, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Gojo Satoru — Silencio</h3>
+            <p class="card-desc">Jujutsu Kaisen</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Gojo Satoru — Silencio</h3>
-          <p class="card-desc">Jujutsu Kaisen</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -709,10 +818,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/jjk-gojo-rojo-card.webp" alt="Remera Gojo Satoru — Dominio, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Gojo Satoru — Dominio</h3>
+            <p class="card-desc">Muryoku Kusho</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Gojo Satoru — Dominio</h3>
-          <p class="card-desc">Muryoku Kusho</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -736,10 +847,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-best">Más vendida</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/naruto-grupo-card.webp" alt="Remera Naruto Uzumaki — Never Give Up, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Naruto Uzumaki — Never Give Up</h3>
+            <p class="card-desc">Konoha 11</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Naruto Uzumaki — Never Give Up</h3>
-          <p class="card-desc">Konoha 11</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -763,10 +876,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/naruto-jiraiya-card.webp" alt="Remera Jiraiya, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Jiraiya</h3>
+            <p class="card-desc">Los Tres Sannin</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Jiraiya</h3>
-          <p class="card-desc">Los Tres Sannin</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -790,10 +905,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/naruto-sasuke-card.webp" alt="Remera Sasuke Uchiha, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Sasuke Uchiha</h3>
+            <p class="card-desc">Clan Uchiha</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Sasuke Uchiha</h3>
-          <p class="card-desc">Clan Uchiha</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -817,10 +934,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Crema</span>
           <img src="assets/img/naruto-pain-card.webp" alt="Remera Pain — Nagato, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Pain — Nagato</h3>
+            <p class="card-desc">Akatsuki</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Pain — Nagato</h3>
-          <p class="card-desc">Akatsuki</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -844,10 +963,12 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           <span class="card-badge-new">Nuevo</span>
           <span class="card-tag">Blanco</span>
           <img src="assets/img/tg-kaneki-card.webp" alt="Remera Kaneki Ken, frente y espalda" loading="lazy">
+          <div class="card-media-caption">
+            <h3 class="card-name">Kaneki Ken</h3>
+            <p class="card-desc">Tokyo Ghoul</p>
+          </div>
         </div>
         <div class="card-body">
-          <h3 class="card-name">Kaneki Ken</h3>
-          <p class="card-desc">Tokyo Ghoul</p>
           <div class="card-price-row">
             <span class="card-price-old">300.000 <sup>Gs.</sup></span>
             <span class="card-price-badge">Oferta Sept.</span>
@@ -876,7 +997,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
       <img src="assets/img/hollow-mask.webp" alt="Remera Gazzabini Tees, detalle de estampado" loading="lazy">
     </div>
     <div class="about-text reveal">
-      <span class="section-eyebrow">Sobre Gazzabini Tees</span>
+      <span class="section-eyebrow"><span class="eyebrow-index">02 —</span>Sobre Gazzabini Tees</span>
       <h2>Remeras para gente que sigue mirando anime a los 25.</h2>
       <p>Gazzabini Tees nace de una idea simple: la ropa de anime en Paraguay no tenía por qué verse barata. Elegimos algodón 100%, estampado DTF de alta duración y diseños propios pensados para durar en el placard, no solo para una foto.</p>
       <div class="about-pillars">
@@ -906,12 +1027,70 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   </div>
 </section>
 
+<!-- ============ MANIFIESTO ============ -->
+<section class="manifesto">
+  <div class="manifesto-glow"></div>
+  <div class="manifesto-grain"></div>
+  <div class="wrap manifesto-inner">
+    <p class="manifesto-text">Cada diseño es para alguien que no tiene que explicar <em>por qué le gusta lo que le gusta.</em></p>
+  </div>
+</section>
+
+<!-- ============ EN MOVIMIENTO (video de clientes) ============ -->
+<section class="section movement" id="en-movimiento">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow"><span class="eyebrow-index">03 —</span>Gazzabini en movimiento</span>
+        <h2 class="section-title">Puestas en la calle, no solo en estudio</h2>
+      </div>
+      <div>
+        <p class="section-note">¿Tenés una foto o un video corto con tu remera puesta? Mandanoslo y lo sumamos acá.</p>
+        <a class="sizeguide-trigger" href="https://wa.me/595987367440?text=Hola!%20Quiero%20mandarte%20una%20foto%2Fvideo%20con%20mi%20remera%20de%20Gazzabini%20Tees" target="_blank" rel="noopener">Mandar mi video por WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="movement-grid reveal" data-movement>
+      <div class="movement-card">
+        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/hollow-mask.webp">
+          <source src="assets/video/cliente-1.mp4" type="video/mp4">
+        </video>
+        <div class="movement-fallback" data-movement-fallback hidden>
+          <img src="assets/img/hollow-mask.webp" alt="">
+          <span>Video próximamente</span>
+        </div>
+        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+      </div>
+      <div class="movement-card">
+        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/ichigo.webp">
+          <source src="assets/video/cliente-2.mp4" type="video/mp4">
+        </video>
+        <div class="movement-fallback" data-movement-fallback hidden>
+          <img src="assets/img/ichigo.webp" alt="">
+          <span>Video próximamente</span>
+        </div>
+        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+      </div>
+      <div class="movement-card">
+        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/naruto-grupo.webp">
+          <source src="assets/video/cliente-3.mp4" type="video/mp4">
+        </video>
+        <div class="movement-fallback" data-movement-fallback hidden>
+          <img src="assets/img/naruto-grupo.webp" alt="">
+          <span>Video próximamente</span>
+        </div>
+        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ RESEÑAS ============ -->
 <section class="section reviews" id="resenas">
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="section-eyebrow">Clientes reales</span>
+        <span class="section-eyebrow"><span class="eyebrow-index">04 —</span>Clientes reales</span>
         <h2 class="section-title">Lo que dicen de sus remeras</h2>
       </div>
     </div>
@@ -949,7 +1128,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="section-eyebrow">Antes de pedir</span>
+        <span class="section-eyebrow"><span class="eyebrow-index">05 —</span>Antes de pedir</span>
         <h2 class="section-title">Preguntas frecuentes</h2>
       </div>
     </div>
@@ -1056,6 +1235,15 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   </div>
   <div class="cart-items" data-cart-items></div>
   <div class="cart-foot">
+    <div class="cart-delivery" data-cart-delivery hidden>
+      <span class="cart-delivery-icon">🚚</span>
+      <span data-cart-delivery-text></span>
+    </div>
+    <div class="cart-trust">
+      <span>Hecho en Paraguay</span>
+      <span>Algodón 100% · DTF</span>
+      <span>Pedido y pago por WhatsApp</span>
+    </div>
     <div class="cart-total"><span>Total</span><span data-cart-total>0 Gs.</span></div>
     <button class="cart-whatsapp" data-cart-whatsapp>Finalizar pedido por WhatsApp</button>
     <p class="cart-note">Al tocar el botón se abre WhatsApp con el detalle de tu pedido ya armado. Coordinamos pago y envío ahí — tu pedido llega en 3 días.</p>
@@ -1066,7 +1254,42 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 <div class="lightbox-overlay" data-lightbox-overlay>
   <button class="lightbox-close" data-lightbox-close aria-label="Cerrar imagen">✕</button>
   <div class="lightbox-content">
-    <img class="lightbox-img" data-lightbox-img src="" alt="">
+    <div class="lightbox-main">
+      <div class="lightbox-img-wrap">
+        <img class="lightbox-img" data-lightbox-img src="" alt="">
+      </div>
+      <div class="lightbox-info" data-lightbox-info hidden>
+        <p class="lightbox-anime" data-lightbox-anime></p>
+        <h3 class="lightbox-name" data-lightbox-name></h3>
+        <p class="lightbox-price" data-lightbox-price></p>
+
+        <div class="lightbox-trust">
+          <span>Algodón 100%</span>
+          <span>DTF alta duración</span>
+          <span>Diseño propio</span>
+          <span>Hecha en Paraguay</span>
+        </div>
+
+        <div class="lightbox-options">
+          <select class="lightbox-select" data-lightbox-select="size" aria-label="Talle">
+            <option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
+          </select>
+          <select class="lightbox-select" data-lightbox-select="fit" aria-label="Corte">
+            <option>Oversized</option><option>Corte Normal</option>
+          </select>
+        </div>
+
+        <div class="lightbox-qty">
+          <button type="button" class="lightbox-qty-btn" data-lightbox-qty-minus aria-label="Restar cantidad">−</button>
+          <span data-lightbox-qty-value>1</span>
+          <button type="button" class="lightbox-qty-btn" data-lightbox-qty-plus aria-label="Sumar cantidad">+</button>
+        </div>
+
+        <button class="lightbox-add" data-lightbox-add type="button">Agregar al pedido</button>
+
+        <p class="lightbox-shipping">Envíos a todo Paraguay · Entrega en 3 días · Pedido y pago por WhatsApp</p>
+      </div>
+    </div>
     <div class="lightbox-related" data-lightbox-related hidden>
       <p class="lightbox-related-title">También te puede interesar</p>
       <div class="lightbox-related-list" data-lightbox-related-list></div>
@@ -1107,6 +1330,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   </div>
 </div>
 
-<script defer src="main.js?v=20260901"></script>
+<script defer src="main.js?v=20260906d"></script>
 </body>
 </html>

@@ -101,14 +101,22 @@
     }, { threshold: 0.02, rootMargin: "0px 0px -2% 0px" });
     targets.forEach(function (el) { io.observe(el); });
 
-    // Mandatory safety net
-    setTimeout(function () {
-      document.querySelectorAll(".reveal:not(.is-visible)").forEach(function (el) {
+    // Safety net: catches any .reveal element the observer missed (e.g. a
+    // jump-scroll landing straight on it before it was ever observed as
+    // intersecting). Runs repeatedly and briefly instead of a single
+    // one-shot 6s check, so a card can't stay invisible for seconds after
+    // becoming visible on screen.
+    var safetyChecks = 0;
+    var safetyTimer = setInterval(function () {
+      safetyChecks++;
+      var pending = document.querySelectorAll(".reveal:not(.is-visible)");
+      pending.forEach(function (el) {
         if (el.getBoundingClientRect().top < window.innerHeight) {
           el.classList.add("is-visible");
         }
       });
-    }, 6000);
+      if (safetyChecks >= 8) clearInterval(safetyTimer);
+    }, 700);
   }
 
   /* ---------------- Card tilt + halo ---------------- */
@@ -152,7 +160,180 @@
           var matches = value === "todas" ||
             (value === "destacados" ? card.getAttribute("data-featured") === "true" : card.getAttribute("data-anime") === value);
           card.classList.toggle("is-filtered-out", !matches);
+          // A card revealed by a filter (or by the "world card" jump-scroll)
+          // may never have crossed the IntersectionObserver's viewport check
+          // if it was far below the fold before reflowing into view here.
+          // Left to the scroll-reveal alone, it can sit at opacity:0 looking
+          // like a blank hole in the grid. Filtered-in results should show
+          // immediately anyway, so force them visible instead of waiting.
+          if (matches) card.classList.add("is-visible");
         });
+      });
+    });
+  }
+
+  /* ---------------- Contadores en vivo por anime ---------------- */
+  function initCollectionCounts() {
+    var cards = document.querySelectorAll("[data-grid] .card[data-anime]");
+    if (!cards.length) return;
+    var counts = {};
+    cards.forEach(function (card) {
+      var anime = card.getAttribute("data-anime");
+      counts[anime] = (counts[anime] || 0) + 1;
+    });
+
+    function label(n) {
+      return n + (n === 1 ? " diseño" : " diseños");
+    }
+
+    document.querySelectorAll("[data-anime-count]").forEach(function (el) {
+      var anime = el.getAttribute("data-anime-count");
+      el.textContent = counts[anime] ? "(" + counts[anime] + ")" : "";
+    });
+    document.querySelectorAll("[data-world-count]").forEach(function (el) {
+      var anime = el.getAttribute("data-world-count");
+      el.textContent = counts[anime] ? label(counts[anime]) : "Próximamente";
+    });
+    document.querySelectorAll("[data-total-count]").forEach(function (el) {
+      el.textContent = cards.length;
+    });
+  }
+
+  /* ---------------- Vitrinas en vivo ("Más pedidas" / "Ofertas") ---------------- */
+  function initSpotlights() {
+    var allCards = Array.prototype.slice.call(document.querySelectorAll(".grid-products .card"));
+    if (!allCards.length) return;
+
+    var configs = [
+      { key: "best", limit: 8, match: function (c) { return !!c.querySelector(".card-badge-best"); } },
+      { key: "offers", limit: 6, match: function (c) { return !!c.querySelector(".card-price-old"); } }
+    ];
+
+    configs.forEach(function (cfg) {
+      var wrap = document.querySelector('[data-spotlight="' + cfg.key + '"]');
+      var list = wrap ? wrap.querySelector("[data-spotlight-list]") : null;
+      if (!wrap || !list) return;
+
+      var picks = allCards.filter(cfg.match).slice(0, cfg.limit);
+      if (!picks.length) {
+        wrap.hidden = true;
+        return;
+      }
+
+      list.innerHTML = "";
+      picks.forEach(function (card) {
+        var cardImg = card.querySelector(".card-media img");
+        var priceEl = card.querySelector(".card-price");
+        var name = card.getAttribute("data-name") || "";
+
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "spotlight-item";
+
+        var thumb = document.createElement("img");
+        thumb.className = "spotlight-thumb";
+        thumb.loading = "lazy";
+        thumb.alt = "";
+        thumb.src = cardImg ? (cardImg.currentSrc || cardImg.getAttribute("src")) : "";
+
+        var label = document.createElement("span");
+        label.className = "spotlight-name";
+        label.textContent = name;
+
+        var price = document.createElement("span");
+        price.className = "spotlight-price";
+        if (priceEl) price.innerHTML = priceEl.innerHTML;
+
+        btn.appendChild(thumb);
+        btn.appendChild(label);
+        btn.appendChild(price);
+
+        btn.addEventListener("click", function () {
+          // If an anime filter currently hides this card, clear it first —
+          // otherwise scrollIntoView on a display:none element does nothing.
+          if (card.classList.contains("is-filtered-out")) {
+            var pill = document.querySelector('[data-filter="todas"]');
+            if (pill) pill.click();
+          }
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+          card.classList.add("card-highlight");
+          window.setTimeout(function () {
+            card.classList.remove("card-highlight");
+          }, 1600);
+        });
+
+        list.appendChild(btn);
+      });
+
+      wrap.hidden = false;
+    });
+  }
+
+  /* ---------------- Tarjetas de colección ("mundos") ---------------- */
+  function initWorldCards() {
+    var worldButtons = document.querySelectorAll("[data-world-filter]");
+    if (!worldButtons.length) return;
+    worldButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var anime = btn.getAttribute("data-world-filter");
+        var pill = document.querySelector('[data-filter="' + anime + '"]');
+        if (pill) pill.click();
+        var filters = document.querySelector("[data-filters]");
+        if (filters) {
+          var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+          window.scrollTo({
+            top: filters.getBoundingClientRect().top + window.scrollY - 90,
+            behavior: reduced ? "auto" : "smooth"
+          });
+        }
+      });
+    });
+  }
+
+  /* ---------------- Video de clientes ("en movimiento") ---------------- */
+  function initMovementVideos() {
+    document.querySelectorAll(".movement-card").forEach(function (cardEl) {
+      var video = cardEl.querySelector("[data-movement-video]");
+      var fallback = cardEl.querySelector("[data-movement-fallback]");
+      var playBtn = cardEl.querySelector("[data-movement-play]");
+      if (!video) return;
+
+      var fallbackShown = false;
+      function showFallback() {
+        if (fallbackShown) return;
+        fallbackShown = true;
+        video.style.display = "none";
+        if (fallback) fallback.hidden = false;
+        if (playBtn) playBtn.style.display = "none";
+      }
+
+      // El <source> puede fallar (404) antes de que este script termine de cargar
+      // (preload="metadata" arranca en cuanto el HTML se parsea), así que además
+      // del listener de "error" chequeamos el estado ya resuelto del video.
+      video.addEventListener("error", showFallback, true);
+      function checkAlreadyFailed() {
+        if (video.error || video.networkState === 3 /* NETWORK_NO_SOURCE */) showFallback();
+      }
+      checkAlreadyFailed();
+      window.setTimeout(checkAlreadyFailed, 2500);
+
+      if (playBtn) {
+        playBtn.addEventListener("click", function () {
+          if (video.paused) {
+            video.play().then(function () {
+              playBtn.classList.add("is-playing");
+            }).catch(showFallback);
+          } else {
+            video.pause();
+            playBtn.classList.remove("is-playing");
+          }
+        });
+      }
+      video.addEventListener("pause", function () {
+        if (playBtn) playBtn.classList.remove("is-playing");
+      });
+      video.addEventListener("ended", function () {
+        if (playBtn) playBtn.classList.remove("is-playing");
       });
     });
   }
@@ -164,7 +345,25 @@
     var closeBtn = document.querySelector("[data-lightbox-close]");
     var relatedWrap = document.querySelector("[data-lightbox-related]");
     var relatedList = document.querySelector("[data-lightbox-related-list]");
+    var infoWrap = document.querySelector("[data-lightbox-info]");
+    var animeEl = document.querySelector("[data-lightbox-anime]");
+    var nameEl = document.querySelector("[data-lightbox-name]");
+    var priceEl = document.querySelector("[data-lightbox-price]");
+    var sizeSel = document.querySelector('[data-lightbox-select="size"]');
+    var fitSel = document.querySelector('[data-lightbox-select="fit"]');
+    var qtyValueEl = document.querySelector("[data-lightbox-qty-value]");
+    var qtyMinusBtn = document.querySelector("[data-lightbox-qty-minus]");
+    var qtyPlusBtn = document.querySelector("[data-lightbox-qty-plus]");
+    var addBtn = document.querySelector("[data-lightbox-add]");
     if (!overlay || !imgEl) return;
+
+    var currentCard = null;
+    var qty = 1;
+
+    function renderQty() {
+      qty = Math.max(1, qty);
+      if (qtyValueEl) qtyValueEl.textContent = qty;
+    }
 
     function buildRelated(currentCard) {
       if (!relatedWrap || !relatedList) return;
@@ -225,10 +424,55 @@
       imgEl.setAttribute("src", src);
       imgEl.setAttribute("alt", alt || "");
       buildRelated(card);
+
+      currentCard = card || null;
+      qty = 1;
+      renderQty();
+
+      if (currentCard && infoWrap) {
+        if (animeEl) animeEl.textContent = currentCard.getAttribute("data-anime") || "";
+        if (nameEl) nameEl.textContent = currentCard.getAttribute("data-name") || "";
+        var cardPriceEl = currentCard.querySelector(".card-price");
+        if (priceEl) priceEl.innerHTML = cardPriceEl ? cardPriceEl.innerHTML : "";
+
+        var cardSizeSel = currentCard.querySelector('[data-select="size"]');
+        var cardFitSel = currentCard.querySelector('[data-select="fit"]');
+        if (sizeSel && cardSizeSel) sizeSel.value = cardSizeSel.value;
+        if (fitSel && cardFitSel) fitSel.value = cardFitSel.value;
+
+        infoWrap.hidden = false;
+      } else if (infoWrap) {
+        infoWrap.hidden = true;
+      }
+
       overlay.classList.add("is-open");
     }
     function closeLightbox() {
       overlay.classList.remove("is-open");
+    }
+
+    if (qtyMinusBtn) {
+      qtyMinusBtn.addEventListener("click", function () {
+        qty -= 1;
+        renderQty();
+      });
+    }
+    if (qtyPlusBtn) {
+      qtyPlusBtn.addEventListener("click", function () {
+        qty += 1;
+        renderQty();
+      });
+    }
+    if (addBtn) {
+      addBtn.addEventListener("click", function () {
+        if (!currentCard) return;
+        addProductToCart(currentCard, {
+          size: sizeSel ? sizeSel.value : undefined,
+          fit: fitSel ? fitSel.value : undefined,
+          qty: qty
+        });
+        closeLightbox();
+      });
     }
 
     document.querySelectorAll(".card-media").forEach(function (media) {
@@ -329,6 +573,30 @@
     return null;
   }
 
+  // Reuses each product card's own real stock line (".card-stock") instead of
+  // duplicating/fabricating that data in the cart — if the card doesn't show a
+  // stock note (most don't), the cart line simply doesn't show one either.
+  function getStockNoteForProduct(id) {
+    if (!id || !window.CSS || !window.CSS.escape) {
+      var card = document.querySelector('[data-product="' + id + '"]');
+      var stockEl = card ? card.querySelector(".card-stock") : null;
+      return stockEl ? stockEl.textContent.trim() : null;
+    }
+    var safeId = window.CSS.escape(id);
+    var card2 = document.querySelector('[data-product="' + safeId + '"]');
+    var stockEl2 = card2 ? card2.querySelector(".card-stock") : null;
+    return stockEl2 ? stockEl2.textContent.trim() : null;
+  }
+
+  // "Si pedís hoy, te llega <fecha>" — computed from today's real date plus
+  // Felipe's already-stated "Entrega en 3 días" policy. Not a fabricated ETA.
+  function formatDeliveryEstimate() {
+    var d = new Date();
+    d.setDate(d.getDate() + 3);
+    var text = d.toLocaleDateString("es-PY", { weekday: "short", day: "numeric", month: "long" });
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
   function updateCartUI() {
     var countEls = document.querySelectorAll("[data-cart-count]");
     var totalQty = cart.reduce(function (s, it) { return s + it.qty; }, 0);
@@ -342,13 +610,22 @@
       itemsEl.innerHTML = '<p class="cart-empty">Todavía no agregaste ninguna remera. Elegí tu diseño en la colección.</p>';
     } else {
       itemsEl.innerHTML = cart.map(function (it, idx) {
+        var stockNote = getStockNoteForProduct(it.id);
         return (
           '<div class="cart-item">' +
             '<img src="' + it.image + '" alt="' + it.name + '">' +
             '<div class="cart-item-info">' +
               '<div class="cart-item-name">' + it.name + '</div>' +
-              '<div class="cart-item-meta">Talle ' + it.size + ' · ' + it.fit + ' · x' + it.qty + '</div>' +
-              '<div class="cart-item-price">' + money(it.price * it.qty) + '</div>' +
+              '<div class="cart-item-meta">Talle ' + it.size + ' · ' + it.fit + '</div>' +
+              (stockNote ? '<div class="cart-item-stock">' + stockNote + '</div>' : '') +
+              '<div class="cart-item-row">' +
+                '<div class="cart-item-qty">' +
+                  '<button type="button" class="cart-item-qty-btn" data-qty-minus="' + idx + '" aria-label="Restar cantidad">−</button>' +
+                  '<span class="cart-item-qty-value">' + it.qty + '</span>' +
+                  '<button type="button" class="cart-item-qty-btn" data-qty-plus="' + idx + '" aria-label="Sumar cantidad">+</button>' +
+                '</div>' +
+                '<div class="cart-item-price">' + money(it.price * it.qty) + '</div>' +
+              '</div>' +
               '<button class="cart-item-remove" data-remove-index="' + idx + '">Quitar</button>' +
             '</div>' +
           '</div>'
@@ -359,12 +636,42 @@
     var total = cart.reduce(function (s, it) { return s + it.price * it.qty; }, 0);
     if (totalEl) totalEl.textContent = money(total);
 
+    var deliveryWrap = document.querySelector("[data-cart-delivery]");
+    var deliveryText = document.querySelector("[data-cart-delivery-text]");
+    if (deliveryWrap && deliveryText) {
+      if (cart.length) {
+        deliveryText.textContent = "Si pedís hoy, te llega " + formatDeliveryEstimate();
+        deliveryWrap.hidden = false;
+      } else {
+        deliveryWrap.hidden = true;
+      }
+    }
+
     saveCart();
 
     itemsEl.querySelectorAll("[data-remove-index]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var idx = parseInt(btn.getAttribute("data-remove-index"), 10);
         cart.splice(idx, 1);
+        updateCartUI();
+      });
+    });
+    itemsEl.querySelectorAll("[data-qty-minus]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = parseInt(btn.getAttribute("data-qty-minus"), 10);
+        var it = cart[idx];
+        if (!it) return;
+        if (it.qty <= 1) cart.splice(idx, 1);
+        else it.qty -= 1;
+        updateCartUI();
+      });
+    });
+    itemsEl.querySelectorAll("[data-qty-plus]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = parseInt(btn.getAttribute("data-qty-plus"), 10);
+        var it = cart[idx];
+        if (!it) return;
+        it.qty += 1;
         updateCartUI();
       });
     });
@@ -380,6 +687,44 @@
     lines.push("");
     lines.push("Total: " + money(total));
     return lines.join("\n");
+  }
+
+  // Shared by the per-card "Agregar al pedido" button and the lightbox's
+  // own add button, so both paths write to the exact same cart array with
+  // identical pixel tracking — one source of truth, no duplicated logic.
+  function addProductToCart(card, opts) {
+    opts = opts || {};
+    if (!card) return null;
+    var id = card.getAttribute("data-product");
+    var name = card.getAttribute("data-name");
+    var price = parseInt(card.getAttribute("data-price"), 10);
+    var image = card.getAttribute("data-image");
+    var cardSizeSel = card.querySelector('[data-select="size"]');
+    var cardFitSel = card.querySelector('[data-select="fit"]');
+    var size = opts.size || (cardSizeSel ? cardSizeSel.value : "M");
+    var fit = opts.fit || (cardFitSel ? cardFitSel.value : "Oversized");
+    var qty = opts.qty || 1;
+
+    var existing = findCartLine(id, size, fit);
+    if (existing) existing.qty += qty;
+    else cart.push({ id: id, name: name, price: price, image: image, size: size, fit: fit, qty: qty });
+
+    trackPixel("AddToCart", {
+      content_name: name,
+      content_ids: [id],
+      content_type: "product",
+      value: price,
+      currency: "PYG"
+    });
+
+    updateCartUI();
+
+    var overlay = document.querySelector("[data-cart-overlay]");
+    var drawer = document.querySelector("[data-cart-drawer]");
+    if (overlay) overlay.classList.add("is-open");
+    if (drawer) drawer.classList.add("is-open");
+
+    return { id: id, name: name, price: price, size: size, fit: fit, qty: qty };
   }
 
   function initCart() {
@@ -405,29 +750,7 @@
       btn.addEventListener("click", function () {
         var card = btn.closest("[data-product]");
         if (!card) return;
-        var id = card.getAttribute("data-product");
-        var name = card.getAttribute("data-name");
-        var price = parseInt(card.getAttribute("data-price"), 10);
-        var image = card.getAttribute("data-image");
-        var sizeSel = card.querySelector('[data-select="size"]');
-        var fitSel = card.querySelector('[data-select="fit"]');
-        var size = sizeSel ? sizeSel.value : "M";
-        var fit = fitSel ? fitSel.value : "Oversized";
-
-        var existing = findCartLine(id, size, fit);
-        if (existing) existing.qty += 1;
-        else cart.push({ id: id, name: name, price: price, image: image, size: size, fit: fit, qty: 1 });
-
-        trackPixel("AddToCart", {
-          content_name: name,
-          content_ids: [id],
-          content_type: "product",
-          value: price,
-          currency: "PYG"
-        });
-
-        updateCartUI();
-        openCart();
+        addProductToCart(card, {});
 
         btn.classList.add("is-added");
         var original = btn.textContent;
@@ -647,6 +970,10 @@
     safe(initReveals, "initReveals");
     safe(initCardTilt, "initCardTilt");
     safe(initFilters, "initFilters");
+    safe(initCollectionCounts, "initCollectionCounts");
+    safe(initSpotlights, "initSpotlights");
+    safe(initWorldCards, "initWorldCards");
+    safe(initMovementVideos, "initMovementVideos");
     safe(initLightbox, "initLightbox");
     safe(initSizeGuide, "initSizeGuide");
     safe(initFaq, "initFaq");
