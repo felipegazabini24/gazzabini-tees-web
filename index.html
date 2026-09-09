@@ -40,7 +40,7 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260906e">
+<link rel="stylesheet" href="styles.css?v=20260908d">
 <link rel="canonical" href="https://felipegazabini24.github.io/gazzabini-tees-web/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23121110%22/><text x=%2250%25%22 y=%2262%25%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22%23ff5a1f%22 font-family=%22sans-serif%22>G</text></svg>">
 
@@ -99,10 +99,15 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="inicio">
-  <div class="hero-bg">
-    <img src="assets/img/ichigo.webp" alt="Remera Ichigo Kurosaki, colección Bleach" loading="eager">
+  <div class="hero-bg" data-hero-bg>
+    <img src="assets/img/ichigo.webp" alt="Remera Ichigo Kurosaki, colección Bleach" loading="eager" data-hero-slide class="is-active">
+    <img src="assets/img/bleach-grupo.webp" alt="Remeras colección Bleach" data-hero-slide>
+    <img src="assets/img/jjk-sukuna.webp" alt="Remera Sukuna, colección Jujutsu Kaisen" data-hero-slide>
+    <img src="assets/img/naruto-grupo.webp" alt="Remeras colección Naruto" data-hero-slide>
   </div>
   <div class="hero-grain"></div>
+  <button class="hero-arrow hero-arrow-prev" data-hero-prev type="button" aria-label="Diseño anterior">‹</button>
+  <button class="hero-arrow hero-arrow-next" data-hero-next type="button" aria-label="Diseño siguiente">›</button>
   <div class="wrap hero-inner">
     <p class="hero-kicker"><span class="dot"></span>Bleach · Jujutsu Kaisen · Naruto · Hecha en Paraguay</p>
     <h1 class="hero-title">Vestí tu <em>anime</em> favorito.</h1>
@@ -278,15 +283,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">250.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 2 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -307,15 +303,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">265.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 3 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -336,15 +323,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">258.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 2 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -365,15 +343,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">275.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 3 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -394,15 +363,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">260.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 2 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -423,15 +383,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
           </div>
           <p class="card-price">280.000 <sup>Gs.</sup></p>
           <p class="card-stock">Quedan 3 en stock</p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -452,15 +403,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">255.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -481,15 +423,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">270.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -510,15 +443,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">250.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -539,15 +463,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">268.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -568,15 +483,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">262.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -597,15 +503,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">278.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -626,15 +523,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">255.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -655,15 +543,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">265.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -684,15 +563,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">250.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -713,15 +583,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">275.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -742,15 +603,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">260.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -771,15 +623,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">252.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -800,15 +643,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">270.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -829,15 +663,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">258.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -858,15 +683,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">265.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -887,15 +703,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">250.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -916,15 +723,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">280.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -945,15 +743,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">262.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -974,15 +763,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
             <span class="card-price-badge">Oferta Sept.</span>
           </div>
           <p class="card-price">255.000 <sup>Gs.</sup></p>
-          <div class="card-options">
-            <select class="card-select" data-select="size" aria-label="Talle">
-              <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
-            <select class="card-select" data-select="fit" aria-label="Corte">
-              <option selected>Oversized</option><option>Corte Normal</option>
-            </select>
-          </div>
-          <button class="card-add" data-add-to-cart>Agregar al pedido</button>
         </div>
       </article>
 
@@ -1052,34 +832,37 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 
     <div class="movement-grid reveal" data-movement>
       <div class="movement-card">
-        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/hollow-mask.webp">
+        <video class="movement-video" data-movement-video autoplay muted loop playsinline preload="metadata" poster="assets/img/hollow-mask.webp">
           <source src="assets/video/cliente-1.mp4" type="video/mp4">
         </video>
         <div class="movement-fallback" data-movement-fallback hidden>
           <img src="assets/img/hollow-mask.webp" alt="">
           <span>Video próximamente</span>
         </div>
-        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+        <button class="movement-sound" data-movement-sound type="button" aria-label="Activar sonido">🔇</button>
+        <span class="movement-sound-badge" data-movement-sound-badge>Sin sonido</span>
       </div>
       <div class="movement-card">
-        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/ichigo.webp">
+        <video class="movement-video" data-movement-video autoplay muted loop playsinline preload="metadata" poster="assets/img/ichigo.webp">
           <source src="assets/video/cliente-2.mp4" type="video/mp4">
         </video>
         <div class="movement-fallback" data-movement-fallback hidden>
           <img src="assets/img/ichigo.webp" alt="">
           <span>Video próximamente</span>
         </div>
-        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+        <button class="movement-sound" data-movement-sound type="button" aria-label="Activar sonido">🔇</button>
+        <span class="movement-sound-badge" data-movement-sound-badge>Sin sonido</span>
       </div>
       <div class="movement-card">
-        <video class="movement-video" data-movement-video muted loop playsinline preload="metadata" poster="assets/img/naruto-grupo.webp">
+        <video class="movement-video" data-movement-video autoplay muted loop playsinline preload="metadata" poster="assets/img/naruto-grupo.webp">
           <source src="assets/video/cliente-3.mp4" type="video/mp4">
         </video>
         <div class="movement-fallback" data-movement-fallback hidden>
           <img src="assets/img/naruto-grupo.webp" alt="">
           <span>Video próximamente</span>
         </div>
-        <button class="movement-play" data-movement-play type="button" aria-label="Reproducir video">▶</button>
+        <button class="movement-sound" data-movement-sound type="button" aria-label="Activar sonido">🔇</button>
+        <span class="movement-sound-badge" data-movement-sound-badge>Sin sonido</span>
       </div>
     </div>
   </div>
@@ -1205,14 +988,21 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
     <div class="footer-col">
       <div class="footer-col-title">Navegación</div>
       <a href="#coleccion">Colección</a>
+      <a href="#como-comprar">Cómo comprar</a>
       <a href="#sobre">Sobre nosotros</a>
       <a href="#preguntas">Preguntas</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Ayuda</div>
+      <a href="https://wa.me/595987367440" target="_blank" rel="noopener">WhatsApp: 0987 367 440</a>
+      <button type="button" class="footer-link-btn" data-sizeguide-open>Guía de talles</button>
       <a href="#contacto">Contacto</a>
     </div>
     <div class="footer-col">
-      <div class="footer-col-title">Contacto</div>
-      <a href="https://wa.me/595987367440" target="_blank" rel="noopener">WhatsApp: 0987 367 440</a>
-      <p>Asunción, Paraguay</p>
+      <div class="footer-col-title">Información</div>
+      <p>Hecho en Paraguay</p>
+      <p>Envíos a todo el país · Entrega en 3 días</p>
+      <p>Pedido y pago por WhatsApp</p>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -1263,13 +1053,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
         <h3 class="lightbox-name" data-lightbox-name></h3>
         <p class="lightbox-price" data-lightbox-price></p>
 
-        <div class="lightbox-trust">
-          <span>Algodón 100%</span>
-          <span>DTF alta duración</span>
-          <span>Diseño propio</span>
-          <span>Hecha en Paraguay</span>
-        </div>
-
         <div class="lightbox-options">
           <select class="lightbox-select" data-lightbox-select="size" aria-label="Talle">
             <option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
@@ -1287,7 +1070,21 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
 
         <button class="lightbox-add" data-lightbox-add type="button">Agregar al pedido</button>
 
-        <p class="lightbox-shipping">Envíos a todo Paraguay · Entrega en 3 días · Pedido y pago por WhatsApp</p>
+        <div class="lightbox-tabs" role="tablist">
+          <button class="lightbox-tab is-active" data-lightbox-tab="detalles" type="button" role="tab" aria-selected="true">Detalles</button>
+          <button class="lightbox-tab" data-lightbox-tab="envio" type="button" role="tab" aria-selected="false">Envío</button>
+        </div>
+        <div class="lightbox-tabpanel" data-lightbox-tabpanel="detalles" role="tabpanel">
+          <div class="lightbox-trust">
+            <span>Algodón 100%</span>
+            <span>DTF alta duración</span>
+            <span>Diseño propio</span>
+            <span>Hecha en Paraguay</span>
+          </div>
+        </div>
+        <div class="lightbox-tabpanel" data-lightbox-tabpanel="envio" role="tabpanel" hidden>
+          <p class="lightbox-shipping">Envíos a todo Paraguay · Entrega en 3 días · Pedido y pago por WhatsApp</p>
+        </div>
       </div>
     </div>
     <div class="lightbox-related" data-lightbox-related hidden>
@@ -1330,6 +1127,6 @@ src="https://www.facebook.com/tr?id=2523163998188496&ev=PageView&noscript=1"
   </div>
 </div>
 
-<script defer src="main.js?v=20260906d"></script>
+<script defer src="main.js?v=20260908d"></script>
 </body>
 </html>

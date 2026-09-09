@@ -291,11 +291,32 @@
   }
 
   /* ---------------- Video de clientes ("en movimiento") ---------------- */
+  // Estilo Tachima: los videos se reproducen solos (mudos) apenas entran en
+  // pantalla, sin que el visitante tenga que tocar play — el botón central
+  // pasa a ser un toggle de sonido, con un aviso "Sin sonido"/"Con sonido".
   function initMovementVideos() {
-    document.querySelectorAll(".movement-card").forEach(function (cardEl) {
+    var cards = document.querySelectorAll(".movement-card");
+    if (!cards.length) return;
+
+    var observer = null;
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var v = entry.target;
+          if (entry.isIntersecting) {
+            v.play().catch(function () { /* el navegador puede bloquear autoplay hasta que haya interacción; no es un error del sitio */ });
+          } else {
+            v.pause();
+          }
+        });
+      }, { threshold: 0.4 });
+    }
+
+    cards.forEach(function (cardEl) {
       var video = cardEl.querySelector("[data-movement-video]");
       var fallback = cardEl.querySelector("[data-movement-fallback]");
-      var playBtn = cardEl.querySelector("[data-movement-play]");
+      var soundBtn = cardEl.querySelector("[data-movement-sound]");
+      var soundBadge = cardEl.querySelector("[data-movement-sound-badge]");
       if (!video) return;
 
       var fallbackShown = false;
@@ -304,41 +325,93 @@
         fallbackShown = true;
         video.style.display = "none";
         if (fallback) fallback.hidden = false;
-        if (playBtn) playBtn.style.display = "none";
+        if (soundBtn) soundBtn.style.display = "none";
+        if (soundBadge) soundBadge.style.display = "none";
       }
 
-      // El <source> puede fallar (404) antes de que este script termine de cargar
-      // (preload="metadata" arranca en cuanto el HTML se parsea), así que además
-      // del listener de "error" chequeamos el estado ya resuelto del video.
+      // Señal real de fallo: el evento "error" (se dispara si el archivo no
+      // existe o el navegador no puede decodificarlo).
+      //
+      // OJO — bug real que estuvo así desde la Entrega 1 y recién se detectó
+      // ahora: antes acá también se chequeaba video.networkState === 3
+      // (NETWORK_NO_SOURCE) de forma SINCRÓNICA apenas arrancaba este script.
+      // Medido con precisión: justo al parsear el HTML, un <video> con fuente
+      // válida pasa por networkState 3 durante el primer instante (todavía no
+      // arrancó el algoritmo de selección de recurso) y recién baja a 2
+      // (cargando) uno o dos milisegundos después. Ese chequeo inmediato leía
+      // ese estado transitorio como "falló" y ocultaba el video para siempre
+      // (fallbackShown es candado de una sola vía) — un falso positivo que no
+      // tiene nada que ver con que el archivo esté bien o mal. Por eso a veces
+      // el video "nunca cargaba": el sitio lo escondía solo, antes de que
+      // tuviera la más mínima chance de reproducirse. Se saca ese chequeo
+      // inmediato/por timeout y se deja solo el evento "error", que es la
+      // señal correcta y la única que el spec garantiza que es fiable.
       video.addEventListener("error", showFallback, true);
-      function checkAlreadyFailed() {
-        if (video.error || video.networkState === 3 /* NETWORK_NO_SOURCE */) showFallback();
-      }
-      checkAlreadyFailed();
-      window.setTimeout(checkAlreadyFailed, 2500);
 
-      if (playBtn) {
-        playBtn.addEventListener("click", function () {
-          if (video.paused) {
-            video.play().then(function () {
-              playBtn.classList.add("is-playing");
-            }).catch(showFallback);
-          } else {
-            video.pause();
-            playBtn.classList.remove("is-playing");
-          }
+      if (soundBtn) {
+        soundBtn.addEventListener("click", function () {
+          video.muted = !video.muted;
+          soundBtn.textContent = video.muted ? "🔇" : "🔊";
+          soundBtn.setAttribute("aria-label", video.muted ? "Activar sonido" : "Silenciar");
+          if (soundBadge) soundBadge.textContent = video.muted ? "Sin sonido" : "Con sonido";
         });
       }
-      video.addEventListener("pause", function () {
-        if (playBtn) playBtn.classList.remove("is-playing");
-      });
-      video.addEventListener("ended", function () {
-        if (playBtn) playBtn.classList.remove("is-playing");
-      });
+
+      if (observer) {
+        observer.observe(video);
+      } else {
+        // Sin soporte de IntersectionObserver (muy poco probable): reproducir directo.
+        video.play().catch(function () {});
+      }
     });
   }
 
   /* ---------------- Image lightbox ---------------- */
+  /* ---------------- Hero carousel ---------------- */
+  function initHeroCarousel() {
+    var bg = document.querySelector("[data-hero-bg]");
+    if (!bg) return;
+    var slides = Array.prototype.slice.call(bg.querySelectorAll("[data-hero-slide]"));
+    if (slides.length < 2) return;
+
+    var prevBtn = document.querySelector("[data-hero-prev]");
+    var nextBtn = document.querySelector("[data-hero-next]");
+    var current = slides.findIndex(function (s) { return s.classList.contains("is-active"); });
+    if (current < 0) current = 0;
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var timer = null;
+
+    function show(index) {
+      slides[current].classList.remove("is-active");
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add("is-active");
+    }
+
+    function next() { show(current + 1); }
+    function prev() { show(current - 1); }
+
+    function startAutoplay() {
+      if (reduceMotion) return;
+      stopAutoplay();
+      timer = window.setInterval(next, 5500);
+    }
+    function stopAutoplay() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+
+    if (nextBtn) nextBtn.addEventListener("click", function () { next(); startAutoplay(); });
+    if (prevBtn) prevBtn.addEventListener("click", function () { prev(); startAutoplay(); });
+
+    var heroSection = document.getElementById("inicio");
+    if (heroSection) {
+      heroSection.addEventListener("mouseenter", stopAutoplay);
+      heroSection.addEventListener("mouseleave", startAutoplay);
+    }
+
+    startAutoplay();
+  }
+
   function initLightbox() {
     var overlay = document.querySelector("[data-lightbox-overlay]");
     var imgEl = document.querySelector("[data-lightbox-img]");
@@ -389,23 +462,25 @@
       picks.forEach(function (c) {
         var cardImg = c.querySelector(".card-media img");
         var name = c.getAttribute("data-name") || "";
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "lightbox-related-item";
+        var price = parseInt(c.getAttribute("data-price"), 10);
+        var cardSizeSel = c.querySelector('[data-select="size"]');
+        var cardFitSel = c.querySelector('[data-select="fit"]');
+
+        var item = document.createElement("div");
+        item.className = "lightbox-related-item";
+
+        var viewBtn = document.createElement("button");
+        viewBtn.type = "button";
+        viewBtn.className = "lightbox-related-view";
+        viewBtn.setAttribute("aria-label", "Ver " + name);
 
         var thumb = document.createElement("img");
         thumb.className = "lightbox-related-thumb";
         thumb.src = cardImg ? (cardImg.currentSrc || cardImg.getAttribute("src")) : "";
         thumb.alt = "";
+        viewBtn.appendChild(thumb);
 
-        var label = document.createElement("span");
-        label.className = "lightbox-related-name";
-        label.textContent = name;
-
-        btn.appendChild(thumb);
-        btn.appendChild(label);
-
-        btn.addEventListener("click", function () {
+        viewBtn.addEventListener("click", function () {
           closeLightbox();
           c.scrollIntoView({ behavior: "smooth", block: "center" });
           c.classList.add("card-highlight");
@@ -414,7 +489,63 @@
           }, 1600);
         });
 
-        relatedList.appendChild(btn);
+        var body = document.createElement("div");
+        body.className = "lightbox-related-body";
+
+        var label = document.createElement("button");
+        label.type = "button";
+        label.className = "lightbox-related-name";
+        label.textContent = name;
+        label.addEventListener("click", function () { viewBtn.click(); });
+
+        var priceEl2 = document.createElement("span");
+        priceEl2.className = "lightbox-related-price";
+        if (!isNaN(price)) priceEl2.textContent = money(price);
+
+        var controls = document.createElement("div");
+        controls.className = "lightbox-related-controls";
+
+        var sizeSel2 = document.createElement("select");
+        sizeSel2.className = "lightbox-related-select";
+        sizeSel2.setAttribute("aria-label", "Talle de " + name);
+        ["S", "M", "L", "XL", "XXL"].forEach(function (opt) {
+          var o = document.createElement("option");
+          o.textContent = opt;
+          sizeSel2.appendChild(o);
+        });
+        if (cardSizeSel) sizeSel2.value = cardSizeSel.value;
+
+        var fitSel2 = document.createElement("select");
+        fitSel2.className = "lightbox-related-select";
+        fitSel2.setAttribute("aria-label", "Corte de " + name);
+        ["Oversized", "Corte Normal"].forEach(function (opt) {
+          var o = document.createElement("option");
+          o.textContent = opt;
+          fitSel2.appendChild(o);
+        });
+        if (cardFitSel) fitSel2.value = cardFitSel.value;
+
+        var addBtn2 = document.createElement("button");
+        addBtn2.type = "button";
+        addBtn2.className = "lightbox-related-add";
+        addBtn2.textContent = "Agregar";
+        addBtn2.addEventListener("click", function () {
+          addProductToCart(c, { size: sizeSel2.value, fit: fitSel2.value, qty: 1 });
+          closeLightbox();
+        });
+
+        controls.appendChild(sizeSel2);
+        controls.appendChild(fitSel2);
+        controls.appendChild(addBtn2);
+
+        body.appendChild(label);
+        if (priceEl2.textContent) body.appendChild(priceEl2);
+        body.appendChild(controls);
+
+        item.appendChild(viewBtn);
+        item.appendChild(body);
+
+        relatedList.appendChild(item);
       });
 
       relatedWrap.hidden = false;
@@ -475,12 +606,29 @@
       });
     }
 
-    document.querySelectorAll(".card-media").forEach(function (media) {
-      media.addEventListener("click", function () {
-        var img = media.querySelector("img");
+    var tabBtns = document.querySelectorAll("[data-lightbox-tab]");
+    tabBtns.forEach(function (tabBtn) {
+      tabBtn.addEventListener("click", function () {
+        var key = tabBtn.getAttribute("data-lightbox-tab");
+        tabBtns.forEach(function (b) {
+          var active = b === tabBtn;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        document.querySelectorAll("[data-lightbox-tabpanel]").forEach(function (panel) {
+          panel.hidden = panel.getAttribute("data-lightbox-tabpanel") !== key;
+        });
+      });
+    });
+
+    // La tarjeta entera es clickeable (antes solo la foto) — ya no tiene
+    // selects ni botón propios, así que no hay riesgo de "robarle" el click
+    // a ningún control interno.
+    document.querySelectorAll(".grid-products .card").forEach(function (card) {
+      card.addEventListener("click", function () {
+        var img = card.querySelector(".card-media img");
         if (!img) return;
-        var card = media.closest(".card");
-        var fullRes = (card && card.getAttribute("data-image")) || img.currentSrc || img.getAttribute("src");
+        var fullRes = card.getAttribute("data-image") || img.currentSrc || img.getAttribute("src");
         openLightbox(fullRes, img.getAttribute("alt"), card);
       });
     });
@@ -496,15 +644,15 @@
 
   /* ---------------- Size guide ---------------- */
   function initSizeGuide() {
-    var trigger = document.querySelector("[data-sizeguide-open]");
+    var triggers = document.querySelectorAll("[data-sizeguide-open]");
     var overlay = document.querySelector("[data-sizeguide-overlay]");
     var closeBtn = document.querySelector("[data-sizeguide-close]");
-    if (!trigger || !overlay) return;
+    if (!triggers.length || !overlay) return;
 
     function open() { overlay.classList.add("is-open"); }
     function close() { overlay.classList.remove("is-open"); }
 
-    trigger.addEventListener("click", open);
+    triggers.forEach(function (trigger) { trigger.addEventListener("click", open); });
     if (closeBtn) closeBtn.addEventListener("click", close);
     overlay.addEventListener("click", function (e) {
       if (e.target === overlay) close();
@@ -965,6 +1113,7 @@
 
   /* ---------------- Boot ---------------- */
   function boot() {
+    safe(initHeroCarousel, "initHeroCarousel");
     safe(initNav, "initNav");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
